@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +7,7 @@ public class BattleSystem : MonoBehaviour {
 
     public GameObject DeckText;
     public Text tx1;
+    public GameObject[] CardImage = new GameObject[10];
 
     public int[] Decks = new int[100];
     public int[] BattleDecks = new int[100];
@@ -15,6 +16,8 @@ public class BattleSystem : MonoBehaviour {
 
     public Text Announce;
 
+    public int CardPosition = 0;
+    public int DeckDrowCount = 0;
     public int deckcards;
     public int Turn = 0;
     public bool PlayerTurn = true; //첫턴은 항상 플레이어의 우선 나중에 수정 가능
@@ -56,7 +59,7 @@ public class BattleSystem : MonoBehaviour {
             BattleDecks[i] = Decks[i];
         }
     }
-    public void CardDrow(int Count)
+    public void CardDraw(int Count)
     {
         for (int l = 0; l < Count; l++)
         {
@@ -73,6 +76,8 @@ public class BattleSystem : MonoBehaviour {
                             BattleDecks[b] = 0;
                             Cardtxt[j].text = "" + Cards[j];
                             CardReload(b);
+                            DeckDrowCount++;
+                            HandCard();
                             deckcards--;
                             break;
                         }
@@ -156,6 +161,31 @@ public class BattleSystem : MonoBehaviour {
         anemyBattle.EnemyTurn = true;
     }
 
+    void HandCard()
+    {
+
+        if (DeckDrowCount == 1)
+        {
+            CardImage[0].SetActive(true);
+            CardImage[0].transform.position = new Vector3(CardPosition, -254, 0);
+        }
+        else if (DeckDrowCount == 2)
+        {
+            CardImage[1].SetActive(true);
+            CardImage[0].transform.position = new Vector3(CardPosition + 8, -254, 0);
+            CardImage[1].transform.position = new Vector3(CardPosition - 8, -254, 0);
+        }
+        else if (DeckDrowCount == 3)
+        {
+            CardImage[2].SetActive(true);
+            CardImage[0].transform.position = new Vector3(CardPosition + 14, -254, 0);
+            CardImage[1].transform.position = new Vector3(CardPosition, -254, 0);
+            CardImage[2].transform.position = new Vector3(CardPosition - 14, -254, 0);
+        }
+       
+    
+    }
+
     
     void Update()
     {
@@ -163,7 +193,7 @@ public class BattleSystem : MonoBehaviour {
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                CardDrow(1);
+                CardDraw(1);
             }
             if (Input.GetKeyDown(KeyCode.A))
             {
